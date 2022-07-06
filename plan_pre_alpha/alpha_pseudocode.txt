@@ -1,0 +1,66 @@
+;alpha pseudocode
+;Lily Donaldson
+;csc330 final
+
+
+;Turned on
+Start screen:
+	Draw start screen
+	if (start button pressed) 	;interrupt? 
+		If !(potentiometers not left)
+			Throw error: Move potentiometers to zero
+		Else:
+			This is up.
+			This is down.
+Current_best_init = false
+			rcall game
+Game:
+	setup:
+		rcall generate_maze
+		Display maze
+DeerX = deer x corner coordinate
+DeerY = deer y corner coordinate
+		Display deer at DeerX, DeerY
+		LRP = LR potentiometer position 
+UDP = UD potentiometer position 
+		Start and display timer/clock, and say “Go”
+	Draw: 	
+if (DeerX, DeerY == maze_end_x,y)
+			rcall End_Game					
+		row_min = 0
+row_max = current max(row, column) space
+		if !(current LR potentiometer = LRP)
+			Change DeerX ((Current potentiometer voltage * row_max) / 5V 
+(potentiometer max)
+		if !(current RR potentiometer = RRP)
+			Change DeerY ((Current potentiometer voltage * row_max) / 5V 
+(potentiometer max)
+Display deer at DeerX, DeerY
+	rjmp Draw
+
+generate_maze:
+	;haven’t decided how I’m going to generate the maze. I think Recursive Division (http://weblog.jamisbuck.org/2011/1/12/maze-generation-recursive-division-algorithm)
+
+End_Game:
+	;jumped out of loop
+	End timer/clock, store timer value
+	If (Current_best_init =false)
+		Current_best = timer value
+	Else:
+		if (timer value < current_best)
+current_best = timer value
+	Display “Done” message, timer value, and current_best
+	Display “Play again? To play again, move the potentiometers all the way right, then all 
+the way left.
+Rcall wait_5V
+
+wait_5V: 
+	if(Current potentiometer voltage = 5 V)
+		rcall wait_0V
+	rjmp wait_5V
+
+wait_0V:
+	if(Current potentiometer voltage = 0 V)
+		rcall Game
+;I want to add some sounds/music with the piezo later		
+	
